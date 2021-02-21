@@ -19,7 +19,7 @@ public class Cuenta implements Serializable {
 	@Column(name="num_cuenta")
 	private int numCuenta;
 
-	private int saldo;
+	private float saldo;
 
 	private String tipo;
 
@@ -43,11 +43,11 @@ public class Cuenta implements Serializable {
 		this.numCuenta = numCuenta;
 	}
 
-	public int getSaldo() {
+	public float getSaldo() {
 		return this.saldo;
 	}
 
-	public void setSaldo(int saldo) {
+	public void setSaldo(float saldo) {
 		this.saldo = saldo;
 	}
 

@@ -2,13 +2,14 @@ package com.moneyapp.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.moneyapp.jwtSeguridad.AutenticadorJWT;
 import com.moneyapp.model.entities.Usuario;
 import com.moneyapp.model.repositories.UsuarioRepository;
@@ -49,6 +50,29 @@ public class UsuarioController {
 		// Lo que devuelve es el jwt creado con un id del usuario en su interior
 		return dto;
 
+	}
+	
+	/**
+	 * 
+	 */
+	
+	@GetMapping("/usuario/autenticadoImagen")
+	public DTO getUsuarioAutenticado (boolean foto, HttpServletRequest request) {
+		DTO dto = new DTO(); // Voy a devolver un dto
+		int idUsuAutenticado = AutenticadorJWT.getIdUsuarioDesdeJwtIncrustadoEnRequest(request); // Obtengo el usuario autenticado, por su JWT
+
+		// Intento localizar un usuario a partir de su id
+		Usuario usuAutenticado = usuRep.findById(idUsuAutenticado).get();
+		if (usuAutenticado != null) {
+			dto.put("idusuario", usuAutenticado.getIdusuario());
+			dto.put("username", usuAutenticado.getUsername());
+			dto.put("password", usuAutenticado.getPassword());
+			dto.put("email", usuAutenticado.getEmail());
+			dto.put("foto", foto? usuAutenticado.getFoto() : "");
+		}
+
+		// Finalmente devuelvo el JWT creado, puede estar vacío si la autenticación no ha funcionado
+		return dto;
 	}
 }
 

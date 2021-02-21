@@ -23,12 +23,12 @@ public class Cometido implements Serializable {
 
 	private String categoria;
 
-	private int comision;
+	private float comision;
 
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date fecha;
 
-	private int gasto;
+	private float gasto;
 
 	//bi-directional many-to-one association to Cuenta
 	@ManyToOne(fetch=FetchType.LAZY)
@@ -67,11 +67,11 @@ public class Cometido implements Serializable {
 		this.categoria = categoria;
 	}
 
-	public int getComision() {
+	public float getComision() {
 		return this.comision;
 	}
 
-	public void setComision(int comision) {
+	public void setComision(float comision) {
 		this.comision = comision;
 	}
 
@@ -83,11 +83,11 @@ public class Cometido implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public int getGasto() {
+	public float getGasto() {
 		return this.gasto;
 	}
 
-	public void setGasto(int gasto) {
+	public void setGasto(float gasto) {
 		this.gasto = gasto;
 	}
 
