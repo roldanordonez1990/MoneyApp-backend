@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.moneyapp.jwtSeguridad.AutenticadorJWT;
@@ -56,6 +57,60 @@ public class UsuarioController {
 	 * 
 	 */
 	
+	@PostMapping("/usuario/nuevoRegistro")
+	public DTO nuevoUsuarioRegistrado(@RequestBody DatosUsuarioNuevoRegistro datosNuevo) {
+		
+		DTO dto = new DTO();
+		
+		dto.put("result", "fail");
+		try {
+			Usuario u = new Usuario();
+			
+			u.setUsername(datosNuevo.username);
+			u.setEmail(datosNuevo.email);
+			u.setPassword(datosNuevo.password);
+			this.usuRep.save(u);
+			dto.put("result", "ok");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return dto;
+		
+	}
+	
+	/**
+	 * 
+	 * @param datosNuevo
+	 * @return
+	 */
+	
+	@PutMapping("/usuario/updateDatos")
+	public DTO updateDatosUsurio(@RequestBody DatosUsuarioNuevoRegistro datosNuevo, HttpServletRequest request) {
+		
+		DTO dto = new DTO();
+		
+		dto.put("result", "fail");
+		try {
+			int idUsuAutenticado = AutenticadorJWT.getIdUsuarioDesdeJwtIncrustadoEnRequest(request);
+			Usuario u = this.usuRep.findById(idUsuAutenticado).get();
+			u.setUsername(datosNuevo.username);
+			u.setEmail(datosNuevo.email);
+			u.setPassword(datosNuevo.password);
+			this.usuRep.save(u);
+			dto.put("result", "ok");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return dto;
+		
+	}
+	/**
+	 * 
+	 * @param foto
+	 * @param request
+	 * @return
+	 */
+	
 	@GetMapping("/usuario/autenticadoImagen")
 	public DTO getUsuarioAutenticado (boolean foto, HttpServletRequest request) {
 		DTO dto = new DTO(); // Voy a devolver un dto
@@ -89,6 +144,25 @@ class DatosUsuario {
 	public DatosUsuario(String username, String password) {
 		super();
 		this.username = username;
+		this.password = password;
+	}
+}
+
+/**
+ * Clase interna que contiene los datos de autenticacion del usuario
+ */
+class DatosUsuarioNuevoRegistro {
+	String username;
+	String email;
+	String password;
+
+	/**
+	 * Constructor
+	 */
+	public DatosUsuarioNuevoRegistro(String username, String email, String password) {
+		super();
+		this.username = username;
+		this.email = email;
 		this.password = password;
 	}
 }
