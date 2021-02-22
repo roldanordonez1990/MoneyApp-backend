@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -112,7 +113,7 @@ public class CometidoController {
 
 	
 	@PutMapping("/cometido/nuevo")
-	private DTO nuevoMensaje(@RequestBody DatosCometido datosNuevo, HttpServletRequest request) {
+	private DTO nuevoCometido(@RequestBody DatosCometido datosNuevo, HttpServletRequest request) {
 		DTO dto = new DTO(); // Voy a devolver un dto
 		dto.put("result", "fail"); // Asumo que voy a fallar, si todo va bien se sobrescribe este valor
 
@@ -146,6 +147,33 @@ public class CometidoController {
 		}
 		return dto;
 	}
+	
+	/**
+	 * 
+	 */
+	
+	@DeleteMapping("/cometido/delete")
+	private DTO deleteCometido(int idcometido, HttpServletRequest request) {
+		DTO dto = new DTO(); // Voy a devolver un dto
+		dto.put("result", "fail"); // Asumo que voy a fallar, si todo va bien se sobrescribe este valor
+
+		try {
+			// Localizo el usuario autenticado
+			int idUsuAutenticado = AutenticadorJWT.getIdUsuarioDesdeJwtIncrustadoEnRequest(request);
+		
+			this.cometidoRep.deleteById(idcometido);
+			
+			
+			dto.put("result", "ok");
+			
+			
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return dto;
+	}
+
 
 }
 
@@ -168,6 +196,24 @@ class DatosCometido {
 		this.categoria = categoria;
 		this.lugar = lugar;
 		this.cuenta = cuenta;
+
+	}
+}
+
+/**
+ * Clase interna que contiene los datos de los cometidos que pasaremos por
+ * Request Body (por el formulario)
+ */
+class DatosIdCometido {
+	int idcometido;
+
+	/**
+	 * Constructor
+	 */
+	public DatosIdCometido(int idcometido) {
+		super();
+		this.idcometido = idcometido;
+		
 
 	}
 }

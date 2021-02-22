@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.moneyapp.jwtSeguridad.AutenticadorJWT;
+import com.moneyapp.model.entities.Cuenta;
 import com.moneyapp.model.entities.Usuario;
 import com.moneyapp.model.repositories.UsuarioRepository;
 
@@ -35,6 +36,31 @@ public class UsuarioController {
 
 		DTO dto = new DTO();
 		dto.put("usuario", usuRep.findByUsernameAndPassword(datos.username, datos.password));
+		return dto;
+
+	}
+	/**
+	 * 
+	 * @param datos
+	 * @return
+	 */
+	
+	@GetMapping("usuario/getDatos")
+	public DTO usuarioAutenticado(HttpServletRequest request) {
+
+		DTO dto = new DTO();
+		int idUsuAutenticado = AutenticadorJWT.getIdUsuarioDesdeJwtIncrustadoEnRequest(request);
+
+		Usuario u = this.usuRep.findById(idUsuAutenticado).get();
+		dto.put("username", u);
+		return dto;
+
+	}
+	
+	private DTO getNombreUsuario(Usuario u) {
+		DTO dto = new DTO();
+		dto.put("username", u.getUsername());
+		
 		return dto;
 
 	}

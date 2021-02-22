@@ -23,4 +23,7 @@ public interface CuentaRepository extends CrudRepository<Cuenta, Integer>{
 	
 	@Query(value="SELECT c.* FROM cuenta as c where c.num_cuenta=?", nativeQuery = true)
 	public Cuenta getCuentaPorNumero(int num_cuenta);
+	
+	@Query(value="SELECT c.* FROM cuenta as c, usuario as u where c.id_usuario=u.idusuario and c.id_usuario!=?", nativeQuery = true)
+	public List<Cuenta>getCuentaPorNombre(int idusuario);
 }

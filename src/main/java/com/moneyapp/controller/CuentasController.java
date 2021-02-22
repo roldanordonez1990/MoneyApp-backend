@@ -78,6 +78,34 @@ public class CuentasController {
 	}
 	/**
 	 * 
+	 */
+	@GetMapping("cuentas/allPorNombre")
+	public DTO todasLasCuentasPorNombre(HttpServletRequest request) {
+
+		DTO dto = new DTO();
+		dto.put("result", "fail");
+		try {
+			// Obtengo el id del usuario a través del token del request del cliente
+			int idUsuAutenticado = AutenticadorJWT.getIdUsuarioDesdeJwtIncrustadoEnRequest(request);
+			// Listado de cometidos (entidad) gracias al método del repositorio
+			List<Cuenta> cuentas = (List<Cuenta>) this.cuentaRep.getCuentaPorNombre(idUsuAutenticado);
+			// Listado de DTO de cometidos que se va a enviar al cliente
+			List<DTO> cuentasPorNombreDTO = new ArrayList<DTO>();
+			// Recorremos la lista de entidad cometidos y se la añadimos a la lista DTO
+			// cometidos
+			for (Cuenta c : cuentas) {
+				cuentasPorNombreDTO.add(getCuentaAndSaldoPorNombre(c));
+			}
+			dto.put("todasLasCuentasPorNombre", cuentasPorNombreDTO);
+			dto.put("result", "ok");
+		} catch (Exception e) {
+
+		}
+
+		return dto;
+	}
+	/**
+	 * 
 	 * @param c
 	 * @return
 	 */
@@ -85,6 +113,15 @@ public class CuentasController {
 		DTO dto = new DTO();
 		dto.put("num_cuenta", c.getNumCuenta());
 		dto.put("saldo", c.getSaldo());
+		return dto;
+
+	}
+	
+	private DTO getCuentaAndSaldoPorNombre(Cuenta c) {
+		DTO dto = new DTO();
+		dto.put("num_cuenta", c.getNumCuenta());
+		dto.put("saldo", c.getSaldo());
+		dto.put("username", c.getUsuario().getUsername());
 		return dto;
 
 	}
