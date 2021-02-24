@@ -38,6 +38,7 @@ public class MyWebFilter implements Filter{
     			uriDePeticionWeb.startsWith("/webapp") ||     // Se intenta acceder a la carpeta de contenido estático "/webapp".
     			uriDePeticionWeb.equals("/usuario/autenticadoJWT") || // Web de autenticado, aunque no traiga JWT en la cabecera se le permite pasar
     			uriDePeticionWeb.equals("/usuario/nuevoRegistro") ||
+    			//uriDePeticionWeb.equals("/usuario/getDatos") ||
     			uriDePeticionWeb.equals("/usuario/updateDatos") ||
     			idUsuarioAutenticadoMedianteJWT != -1) {     // Cualquier petición con un JWT válido, que tenga un id de usuario encriptado
     		filterChain.doFilter(servletRequest, servletResponse);  // Permito que la ejecución del request continúe su curso
